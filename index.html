@@ -487,7 +487,7 @@
         <div class="mail">0382819293</div>
       </div>
       <div class="contact-actions">
-        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Lengochuyen.mis@gmail.com" target="_blank" rel="noopener" class="btn-pill-fill">Gửi email</a>
+        <a href="mailto:Lengochuyen.mis@gmail.com" onclick="return openGmailCompose(event)" class="btn-pill-fill">Gửi email</a>
       </div>
     </div>
   </div>
@@ -614,6 +614,37 @@
   <div class="wrap">© 2026 Lê Ngọc Huyền · Portfolio Business Analyst</div>
 </footer>
 
+<script>
+  function openGmailCompose(e){
+    e.preventDefault();
+    var email = "Lengochuyen.mis@gmail.com";
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    var webComposeUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(email);
+
+    if(/android/i.test(ua)){
+      // Try to open the Gmail Android app directly; fall back to Gmail web if not installed
+      var intentUrl = "intent://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(email)
+        + "#Intent;scheme=https;package=com.google.android.gm;S.browser_fallback_url="
+        + encodeURIComponent(webComposeUrl) + ";end;";
+      window.location.href = intentUrl;
+    } else if(/iPad|iPhone|iPod/.test(ua) && !window.MSStream){
+      // Try the Gmail iOS app URL scheme; fall back to Gmail web if not installed
+      var appUrl = "googlegmail:///co?to=" + encodeURIComponent(email);
+      var fellBack = false;
+      var timer = setTimeout(function(){
+        if(!fellBack){
+          fellBack = true;
+          window.location.href = webComposeUrl;
+        }
+      }, 600);
+      window.addEventListener('pagehide', function(){ clearTimeout(timer); });
+      window.location.href = appUrl;
+    } else {
+      window.open(webComposeUrl, "_blank", "noopener");
+    }
+    return false;
+  }
+</script>
 <script>
   function openModal(id){
     document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
